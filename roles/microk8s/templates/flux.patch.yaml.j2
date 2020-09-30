@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flux
+  namespace: {{ flux_namespace }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: flux
+          args:
+            - --manifest-generation=true
+            - --memcached-hostname=memcached.flux
+            - --memcached-service=
+            - --ssh-keygen-dir=/var/fluxd/keygen
+            - --git-branch={{ git_branch }}
+            - --git-path=namespaces,workloads
+            - --git-user={{ github_user }}
+            - --git-email={{ github_user }}@users.noreply.github.com
+            - --git-url=git@github.com:{{ github_user }}/{{ github_repo }}.git

@@ -1,0 +1,15 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: yes
+      gateway4: {{ k8s_netplan_gateway }}
+      nameservers:
+        {% for dns in k8s_netplan_dns %}
+        - {{ dns }}
+        {% endfor %}
+      addresses:
+        {% for i in range(k8s_static_ip_start, k8s_static_ip_end) %}
+        - {{ k8s_static_ip_prefix ~ "." ~ i "/24" }}
+        {% endfor %}

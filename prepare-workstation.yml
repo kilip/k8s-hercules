@@ -1,0 +1,6 @@
+- name: "Prepare workstation"
+  hosts: workstation
+  become: true
+  tasks:
+    - include_role:
+        name: workstation

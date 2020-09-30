@@ -1,0 +1,7 @@
+namespace: {{ flux_namespace }}
+resources:
+  - namespace.yaml
+bases:
+  - github.com/fluxcd/flux//deploy
+patchesStrategicMerge:
+  - patch.yaml

@@ -1,0 +1,30 @@
+- name: ensure microk8s required package installed
+  become: true
+  snap:
+    name:
+      - microk8s
+      - kubectl
+      - fluxctl
+      - helm
+    classic: yes
+    state: present
+
+- name: microk8s status
+  become: true
+  command: microk8s status --wait-ready
+  register: status
+  changed_when: false
+
+- name: ensure microk8s modules enabled
+  become: true
+  command: "microk8s enable {{ item }}"
+  with_items: "{{ k8s_plugins }}"
+  changed_when: false
+
+- name: set alias
+  lineinfile:
+    path: "/home/{{ k8s_user }}/.bashrc"
+    line: "{{ item }}"
+  with_items:
+    - "alias helm='microk8s helm'"
+    - "alias kubectl='microk8s kubectl'"

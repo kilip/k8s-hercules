@@ -1,0 +1,30 @@
+- debug: var=k8s_user
+
+- name: ensure template target dir exists
+  file:
+    path: "{{ kustomize_dir }}"
+    state: directory
+    owner: "{{ k8s_user }}"
+    group: "{{ k8s_user }}"
+
+- name: compile templates
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ k8s_user }}"
+    group: "{{ k8s_user }}"
+  with_items:
+    - src: flux.kustomization.yaml.j2
+      dest: "{{ kustomize_dir}}/kustomization.yaml"
+    - src: flux.patch.yaml.j2
+      dest: "{{ kustomize_dir}}/patch.yaml"
+    - src: flux.namespace.yaml.j2
+      dest: "{{ kustomize_dir }}/namespace.yaml"
+  register: result
+
+- debug: var=result
+  when: result.changed
+
+- name: install flux with kustomize
+  command: "kubectl apply -k {{ kustomize_dir }}"
+  when: result.changed

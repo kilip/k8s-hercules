@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: hercules
+    hostname: hercules
+    image: kilip/molecule-ubuntu:20.04
+    pre_build_image: true
+    privileged: true
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/lib/docker
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      hosts: inventory/hosts.ini
+      group_vars: inventory/group_vars
+      host_vars: inventory/host_vars
+  playbooks:
+    converge: ../../playbook.yml
+
+verifier:
+  name: ansible

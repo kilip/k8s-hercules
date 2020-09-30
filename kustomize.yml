@@ -1,0 +1,7 @@
+- name: Configures clusters with flux and kustomize
+  hosts: microk8s
+  tasks:
+    - name: include kustomize tasks
+      include_role:
+        name: microk8s
+        tasks_from: kustomize.yml
