@@ -5,24 +5,29 @@
     - github_user
     - github_repo
     - git_branch
-    - k8s_user
+    - k8s_user.name
+    - k8s_user.group
     - k8s_plugins
     - k8s_static
     - flux_namespace
 
 - name: update apt cache
-  become: true
   apt:
     update_cache: true
     cache_valid_time: 600
 
 - name: ensure required packages installed
-  become: true
   package:
     name:
       - snapd
       - python3-pip
     state: present
+
+- name: ensure snapd service enabled and started
+  service:
+    name: snapd
+    enabled: true
+    state: started
 
 - name: "include microk8s install tasks"
   include_tasks: microk8s.yml

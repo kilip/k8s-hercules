@@ -1,5 +1,6 @@
 ---
 - hosts: microk8s
+  become: true
   tasks:
     - include_vars: config.yml
     - include_role:

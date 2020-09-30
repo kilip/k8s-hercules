@@ -1,20 +1,25 @@
 ---
 dependency:
   name: galaxy
+
 driver:
-  name: docker
+  name: delegated
+  options:
+    managed: false
+    ansible_connection_options: []
+    #login_cmd_template: 'ssh localhost -p 2222 -i .vagrant/machines/default/virtualbox/private_key'
+
+    #  ansible_user: vagrant
+    #  ansible_host: localhost
+    #  ansible_port: 2222
+
 platforms:
   - name: hercules
-    hostname: hercules
-    image: kilip/molecule-ubuntu:20.04
-    pre_build_image: true
-    privileged: true
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /var/lib/docker
+
+
 provisioner:
   name: ansible
+  log: true
   inventory:
     links:
       hosts: inventory/hosts.ini

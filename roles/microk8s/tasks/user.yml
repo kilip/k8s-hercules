@@ -1,5 +1,5 @@
 - name: add user to microk8s group
-  become: true
+  k8s_user
   user:
     name: "{{ k8s_user }}"
     groups: microk8s
@@ -16,14 +16,12 @@
   register: _kube_config_stat
 
 - name: dump microk8s config
-  become: true
   shell: 
     cmd: "microk8s config >> {{ kube_config_path }}"
     creates: "{{ kube_config_path }}"
   #when: "{{ true != _kube_config_stat.stat.exists }}"
 
 - name: change config file mode
-  become: true
   file:
     path: "{{ kube_config_path }}"
     mode: "0600"

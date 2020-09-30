@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include mikro8s-home-playbook"
-      include_role:
-        name: "mikro8s-home-playbook"

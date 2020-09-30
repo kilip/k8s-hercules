@@ -8,3 +8,4 @@ kustomize_dir: "{{ kube_config_dir }}/kustomize"
 
 k8s_longhorn: false
 
+microk8s_cmd: "/snap/bin/microk8s"
