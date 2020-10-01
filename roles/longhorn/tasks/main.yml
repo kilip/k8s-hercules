@@ -1,0 +1,13 @@
+- name: "get longhorn stat"
+  k8s_info:
+    kind: Service
+    name: longhorn-frontend
+    namespace: longhorn-system
+  register: stat
+
+- name: deploy longhorn
+  include_tasks: deploy.yml
+  when: stat.resources == []
+
+- name: configures ingress
+  include_tasks: ingress.yml

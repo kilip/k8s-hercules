@@ -1,0 +1,45 @@
+# longhorn secret
+- name: "get longhorn secret stats"
+  k8s_info:
+    kind: Secret
+    name: basic-auth
+    namespace: longhorn-system
+  register: stat
+
+- copy:
+    dest: /tmp/longhorn.auth
+    content: "{{ longhorn_password_file }}"
+  when: stat.resources == []
+
+- name: "creates ingress secret"
+  command: "/snap/bin/kubectl -n longhorn-system create secret generic basic-auth --from-file=auth"
+  when: stat.resources == []
+  
+- name: "apply longhorn ingress config"
+  k8s:
+    state: present
+    apply: yes
+    namespace: longhorn-system
+    definition:
+      apiVersion: networking.k8s.io/v1beta1
+      kind: Ingress
+      metadata:
+        name: longhorn-ingress
+        namespace: longhorn-system
+        annotations:
+          # type of authentication
+          nginx.ingress.kubernetes.io/auth-type: basic
+          # prevent the controller from redirecting (308) to HTTPS
+          nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+          # name of the secret that contains the user/password definitions
+          nginx.ingress.kubernetes.io/auth-secret: basic-auth
+          # message to display with an appropriate context why the authentication is required
+          nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
+      spec:
+        rules:
+        - http:
+            paths:
+            - path: /
+              backend:
+                serviceName: longhorn-frontend
+                servicePort: 80

@@ -1,0 +1,12 @@
+- name: "longhorn >> get longhorn config"
+  get_url:
+    url: https://raw.githubusercontent.com/longhorn/longhorn/master/deploy/longhorn.yaml
+    dest: "/tmp/longhorn.yml"
+  when: stat.resources == []
+
+- name: "apply longhorn config"
+  k8s:
+    apply: yes
+    state: present
+    src: "/tmp/longhorn.yml"
+  when: stat.resources == []
