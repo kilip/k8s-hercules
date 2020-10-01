@@ -1,8 +1,5 @@
 github_user: kilip
 github_repo: olympus
-k8s_user: toni
-
-k8s_static:
-  ip_start: 2
-  ip_end: 254
-  ip_prefix: 192.168.20.2
+k8s_user:
+  name: vagrant
+  group: vagrant

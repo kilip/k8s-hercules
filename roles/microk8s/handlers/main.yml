@@ -1,0 +1,5 @@
+- name: reset ssh
+  meta: reset_connection
+
+- name: netplan apply
+  command: netplan apply

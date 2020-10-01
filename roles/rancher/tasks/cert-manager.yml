@@ -1,0 +1,31 @@
+- name: "rancher ~> get jetstack cards"
+  get_url:
+    url: https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.crds.yaml
+    dest: /tmp/cert-manager.crds.yaml
+
+
+- name: "rancher ~> install cert-manager custom resource definition"
+  command: "microk8s.kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.0.2/cert-manager.crds.yaml"
+
+- name: "rancher ~> add jetstack repo"
+  community.kubernetes.helm_repository:
+    name: jetstack
+    repo_url: https://charts.jetstack.io
+
+- name: "rancher ~> install cert-manager"
+  community.kubernetes.helm:
+    name: cert-manager
+    namespace: cert-manager
+    chart_ref: jetstack/cert-manager
+    create_namespace: yes
+#- name: "rancher ~> install cert manager"
+#  become_user: "{{ k8s_user.name }}"
+#  community.kubernetes.k8s:
+#    apply: yes
+#    state: present
+#    src: /tmp/cert-manager.crds.yaml
+#    validate:
+#      fail_on_error: false
+
+#- name: "create namespace for cert-manager"
+#  become_user: "{{ k8s_user.name }}"

@@ -28,15 +28,15 @@
   file:
     path: "{{ kustomize_dir }}"
     state: directory
-    owner: "{{ k8s_user }}"
-    group: "{{ k8s_user }}"
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.name }}"
 
 - name: "export templates"
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    owner: "{{ k8s_user }}"
-    group: "{{ k8s_user }}"
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.name }}"
   with_items:
     - src: "flux.kustomization.yaml.j2"
       dest: "{{ kustomize_dir }}/kustomization.yaml"

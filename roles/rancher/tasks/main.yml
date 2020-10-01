@@ -1,0 +1,8 @@
+- name: "get cert-manager stat"
+  community.kubernetes.helm_info:
+    release_name: cert-manager
+    release_namespace: cert-manager
+
+- name: "install cert-manager"
+  import_tasks: cert-manager.yml
+  when: status != []

@@ -2,10 +2,14 @@ github_url: "git@github.com:{{ github_user }}/{{ github_repo }}.git"
 git_branch: master
 flux_namespace: flux
 
-kube_config_dir: "/home/{{ k8s_user }}/.kube"
+kube_config_dir: "/home/{{ k8s_user.name }}/.kube"
 kube_config_path: "{{ kube_config_dir }}/config"
 kustomize_dir: "{{ kube_config_dir }}/kustomize"
 
 k8s_longhorn: false
 
 microk8s_cmd: "/snap/bin/microk8s"
+
+configure_netplan: no
+
+configure_rancher: no

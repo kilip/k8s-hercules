@@ -2,3 +2,9 @@
   template:
     src: netplan.yaml.j2
     dest: /etc/netplan/50-cloud-init.yaml
+    backup: yes
+  register: stat
+
+- name: apply netplan config
+  command: "netplan --debug apply"
+  when: stat.changed

@@ -1,32 +1,38 @@
-- name: ensure k8s user exists
-  user:
-    name: "{{ k8s_user }}"
+- name: ensure required packages installed
+  package:
+    name:
+      - snapd
+      - python3-pip
     state: present
+
+- name: ensure snapd service enabled and started
+  service:
+    name: snapd
+    enabled: true
+    state: started
 
 - name: ensure microk8s required package installed
   snap:
     name:
       - microk8s
       - kubectl
-      - fluxctl
       - helm
     classic: yes
     state: present
 
-- name: microk8s status
+- name: wait microk8s status ready
   command: "{{ microk8s_cmd }} status --wait-ready"
   register: status
   changed_when: false
 
+- name: "include microk8s user config"
+  include_tasks: user.yml
+
+- name: "reset ssh connections"
+  meta: flush_handlers
+
 - name: ensure microk8s modules enabled
-  command: "microk8s.enable {{ item }}"
+  become_user: "{{ k8s_user.name }}"
+  command: "/snap/bin/microk8s.enable {{ item }}"
   with_items: "{{ k8s_plugins }}"
   changed_when: false
-
-- name: set alias
-  lineinfile:
-    path: "/home/{{ k8s_user }}/.bashrc"
-    line: "{{ item }}"
-  with_items:
-    - "alias helm='microk8s helm'"
-    - "alias kubectl='microk8s kubectl'"

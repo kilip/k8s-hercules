@@ -1,0 +1,6 @@
+- instance: hercules
+  address: 127.0.0.1
+  identity_file: ".vagrant/machines/default/virtualbox/private_key"
+  user: vagrant
+  password: vagrant
+  become_pass: vagrant

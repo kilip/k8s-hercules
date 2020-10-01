@@ -1,15 +1,15 @@
 - name: add user to microk8s group
-  k8s_user
   user:
-    name: "{{ k8s_user }}"
+    name: "{{ k8s_user.name }}"
     groups: microk8s
     append: yes
 
 - name: configures user
   file:
-    path: "/home/{{ k8s_user }}/.kube"
+    path: "/home/{{ k8s_user.name }}/.kube"
     state: directory
-    owner: "{{ k8s_user }}"
+    owner: "{{ k8s_user.name }}"
+  notify: reset ssh
 
 - stat: 
     path: "{{ kube_config_path }}"
@@ -25,5 +25,5 @@
   file:
     path: "{{ kube_config_path }}"
     mode: "0600"
-    owner: "{{ k8s_user }}"
-    group: "{{ k8s_user }}"
+    owner: "{{ k8s_user.name }}"
+    group: "{{ k8s_user.name }}"

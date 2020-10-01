@@ -1,3 +1,6 @@
+roles:
+  - geerlingguy.docker
+  - geerlingguy.kubernetes
 collections:
   - ansible.posix
   - community.kubernetes

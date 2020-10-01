@@ -1,2 +1,12 @@
-- name: install helm
-  
+- name: "get kubectl serviceaccount facts"
+  command: "microk8s.kubectl get serviceaccount,clusterrolebinding -n kube-system"
+  register: stat
+  changed_when: false
+
+- name: "helm ~> create service account"
+  command: "{{ item }}"
+  with_items:
+    - microk8s.kubectl create serviceaccount tiller --namespace kube-system
+    - microk8s.kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+    - "microk8s.helm init --service-account=tiller"
+  when: "'tiller' not in stat.stdout"
